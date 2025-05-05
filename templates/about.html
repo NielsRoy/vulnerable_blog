@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header">
+                <h2>Acerca de este Blog</h2>
+            </div>
+            <div class="card-body">
+                <p>Este blog ha sido creado con el propósito de demostrar diferentes vulnerabilidades web comunes. Es una herramienta educativa para entender la importancia de la seguridad en aplicaciones web.</p>
+                
+                <h3 class="mt-4">Vulnerabilidades Implementadas</h3>
+                <ul class="list-group mb-4">
+                    <li class="list-group-item list-group-item-danger">SQL Injection - En la funcionalidad de búsqueda</li>
+                    <li class="list-group-item list-group-item-danger">XSS (Cross-Site Scripting) - En los comentarios</li>
+                    <li class="list-group-item list-group-item-danger">CSRF (Cross-Site Request Forgery) - En la actualización de perfil</li>
+                    <li class="list-group-item list-group-item-danger">Clickjacking - Falta de encabezados X-Frame-Options</li>
+                    <li class="list-group-item list-group-item-danger">Open Redirect - En la funcionalidad de redirección</li>
+                    <li class="list-group-item list-group-item-danger">Headers de Seguridad Faltantes - Configuración insegura del servidor</li>
+                </ul>
+                
+                <div class="alert alert-warning">
+                    <h4 class="alert-heading">¡Advertencia!</h4>
+                    <p>Este sitio web es intencionalmente inseguro. Nunca ingrese información personal real ni lo utilice para ningún propósito que no sea educativo.</p>
+                </div>
+                
+                <h3 class="mt-4">Ejemplo de Open Redirect</h3>
+                <p>Prueba la vulnerabilidad de Open Redirect con estos enlaces:</p>
+                
+                <div class="list-group mb-4">
+                    <a href="{{ url_for('open_redirect', url='https://www.google.com') }}" class="list-group-item list-group-item-action">
+                        Redirección a Google
+                    </a>
+                    <a href="{{ url_for('open_redirect', url='https://example.com') }}" class="list-group-item list-group-item-action">
+                        Redirección a Example.com
+                    </a>
+                </div>
+                
+                <div class="card mt-4 bg-light">
+                    <div class="card-header text-danger">
+                        <strong>⚠️ Vulnerabilidades de Clickjacking y Headers</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Este sitio no implementa el encabezado X-Frame-Options, lo que lo hace vulnerable a ataques de Clickjacking.</p>
+                        <p class="card-text">Además, faltan varios encabezados de seguridad importantes como Content-Security-Policy.</p>
+                    </div>
+                </div>
+                
+                <div class="card mt-4 bg-light">
+                    <div class="card-header text-danger">
+                        <strong>⚠️ Demostraciones de Vulnerabilidades</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Para ver demostraciones de los ataques, puedes visitar:</p>
+                        <ul>
+                            <li><a href="/static/csrf-demo.html" target="_blank">Demostración de CSRF</a></li>
+                            <li><a href="/static/clickjacking-demo.html" target="_blank">Demostración de Clickjacking</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

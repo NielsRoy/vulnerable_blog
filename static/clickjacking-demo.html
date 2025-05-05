@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clickjacking Demo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #dc3545;
+        }
+        .iframe-container {
+            position: relative;
+            width: 600px;
+            height: 400px;
+            margin: 30px auto;
+            border: 2px solid #dc3545;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255,255,255,0.01);
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .fake-button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.5; /* Para demostraciones educativas */
+            z-index: 1;
+        }
+        .warning {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            border-radius: 4px;
+        }
+        .explanation {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e2f0d9;
+            border: 1px solid #c6e0b4;
+            color: #375623;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Demostración de Clickjacking</h1>
+        
+        <p>En un ataque de clickjacking real, la iframe estaría oculta o apenas visible. Para fines educativos, hemos hecho la iframe parcialmente visible.</p>
+        
+        <div class="iframe-container">
+            <!-- La página vulnerable cargada en un iframe -->
+            <iframe src="http://localhost:5000/profile" title="Página vulnerable"></iframe>
+            
+            <!-- Capa transparente con botón engañoso -->
+            <div class="overlay">
+                <button class="fake-button">¡Haz Clic Para Ganar!</button>
+            </div>
+        </div>
+        
+        <div class="warning">
+            <strong>⚠️ Advertencia:</strong> Esta es una demostración educativa de un ataque de clickjacking. 
+            <p>En un escenario real, el usuario pensaría que está haciendo clic en el botón verde, pero en realidad estaría interactuando con la página que se muestra en el iframe. Si el usuario estuviera logueado en el sitio vulnerable, podría inadvertidamente realizar acciones en su cuenta.</p>
+        </div>
+        
+        <div class="explanation">
+            <strong>Explicación técnica:</strong>
+            <p>La vulnerabilidad se debe a la falta del encabezado HTTP <code>X-Frame-Options</code> en la respuesta del servidor. Este encabezado impediría que la página se cargue dentro de un iframe en un sitio diferente.</p>
+            <p>Para arreglar esta vulnerabilidad, el sitio debería implementar:</p>
+            <ul>
+                <li><code>X-Frame-Options: DENY</code> o <code>X-Frame-Options: SAMEORIGIN</code></li>
+                <li>Una política de Content Security Policy (CSP) con la directiva <code>frame-ancestors</code></li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

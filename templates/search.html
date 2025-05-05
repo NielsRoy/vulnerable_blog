@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h2>Resultados de la búsqueda</h2>
+            </div>
+            <div class="card-body">
+                <div class="mb-4">
+                    <form action="{{ url_for('search') }}" method="get" class="d-flex">
+                        <input class="form-control me-2" type="search" name="q" placeholder="Buscar artículos..." value="{{ query }}" required>
+                        <button class="btn btn-primary" type="submit">Buscar</button>
+                    </form>
+                </div>
+                
+                <h4>Resultados para: "{{ query }}"</h4>
+                
+                {% if posts %}
+                    <div class="list-group mt-3">
+                        {% for post in posts %}
+                            <a href="{{ url_for('view_post', post_id=post[0]) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ post[1] }}</h5>
+                                    <small>Autor: {{ post[3] }}</small>
+                                </div>
+                                <p class="mb-1">{{ post[2]|truncate(150) }}</p>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="alert alert-info mt-3">
+                        No se encontraron resultados para tu búsqueda.
+                    </div>
+                {% endif %}
+                
+                <div class="card mt-4 bg-light">
+                    <div class="card-header text-danger">
+                        <strong>⚠️ Vulnerable a SQL Injection</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Esta funcionalidad de búsqueda es intencionalmente vulnerable a SQL Injection.</p>
+                        <p class="card-text">Prueba buscar: <code>' OR '1'='1</code> para ver todos los artículos</p>
+                        <p class="card-text">O prueba: <code>' UNION SELECT id, username, password, 'admin' FROM users --</code> para ver las credenciales</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

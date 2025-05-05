@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<article>
+    <h1 class="mb-4">{{ post[1] }}</h1>
+    <p class="text-muted">Escrito por: {{ post[3] }}</p>
+    
+    <div class="article-content mb-5">
+        {{ post[2] }}
+    </div>
+    
+    <hr>
+    
+    <div class="comments-section mt-4">
+        <h3>Comentarios</h3>
+        
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="comment-box">
+                <h5>{{ comment[2] }} dijo:</h5>
+                <!-- Vulnerabilidad XSS: No escapa el contenido del comentario -->
+                <p>{{ comment[3]|safe }}</p>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No hay comentarios aún. ¡Sé el primero!</p>
+        {% endif %}
+        
+        <form action="{{ url_for('add_comment', post_id=post[0]) }}" method="post" class="mt-4">
+            <div class="mb-3">
+                <label for="comment" class="form-label">Deja un comentario:</label>
+                <textarea class="form-control" id="comment" name="comment" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Publicar Comentario</button>
+        </form>
+        
+        <div class="card mt-4 bg-light">
+            <div class="card-header text-danger">
+                <strong>⚠️ Vulnerable a XSS (Cross-Site Scripting)</strong>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Esta página es intencionalmente vulnerable a XSS.</p>
+                <p class="card-text">Prueba comentar con: <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></p>
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="blog-header py-3 text-center bg-dark text-white mb-4">
+    <div class="container">
+        <h1 class="display-4">Blog de CiberSeguridad</h1>
+        <p class="lead">Aprende sobre seguridad web mientras exploras un sitio vulnerable</p>
+    </div>
+</div>
+
+<div class="row mb-2">
+    {% for post in posts %}
+    <div class="col-md-6">
+        <div class="card mb-4 shadow-sm h-100">
+            <div class="card-body">
+                <h3 class="card-title">{{ post[1] }}</h3>
+                <p class="card-text">{{ post[2]|truncate(100) }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="btn-group">
+                        <a href="{{ url_for('view_post', post_id=post[0]) }}" class="btn btn-sm btn-outline-primary">Leer más</a>
+                    </div>
+                    <small class="text-muted">Autor: {{ post[3] }}</small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+<div class="alert alert-danger mt-4">
+    <h4 class="alert-heading">¡Sitio Vulnerable para Pruebas!</h4>
+    <p>Este blog contiene vulnerabilidades comunes para ser utilizado como herramienta de aprendizaje:</p>
+    <ul>
+        <li>SQL Injection en la búsqueda</li>
+        <li>XSS en los comentarios</li>
+        <li>CSRF en actualización de perfil</li>
+        <li>Clickjacking por falta de headers X-Frame-Options</li>
+        <li>Open Redirect vulnerable</li>
+        <li>Headers de seguridad faltantes</li>
+    </ul>
+    <p>Úsalo para practicar la identificación de vulnerabilidades y el escaneo de seguridad.</p>
+</div>
+{% endblock %}
