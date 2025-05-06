@@ -29,12 +29,30 @@
                 <p>Prueba la vulnerabilidad de Open Redirect con estos enlaces:</p>
                 
                 <div class="list-group mb-4">
-                    <a href="{{ url_for('open_redirect', url='https://www.google.com') }}" class="list-group-item list-group-item-action">
-                        Redirección a Google
-                    </a>
-                    <a href="{{ url_for('open_redirect', url='https://example.com') }}" class="list-group-item list-group-item-action">
-                        Redirección a Example.com
-                    </a>
+                    <span class="list-group-item">
+                        <strong>Redirección normal:</strong>
+                    </span>
+                    <span class="list-group-item list-group-item-action">
+                        Mira esta publicación sobre XSS:
+                        <a href="{{ url_for('open_redirect', url='post/9') }}">
+                            http://localhost:5000/redirect?url=post/9
+                        </a>
+                    </span>
+                    <span class="list-group-item">
+                        <strong>Redirección a Sitio Malicioso:</strong>
+                    </span>
+                    <span class="list-group-item list-group-item-action">
+                        <span>Mira esta publicación sobre XSS: </span>
+                        <a href="{{ url_for('open_redirect', url='https://www.google.com') }}" >
+                            http://localhost:5000/redirect?url=https://www.google.com
+                        </a>
+                    </span>
+                    <span class="list-group-item list-group-item-action text-truncate">
+                        <span>URL en hexadecimal: </span>
+                        <a href="{{ url_for('open_redirect', url='//%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D') }}" class="text-truncate">
+                            http://localhost:5000/redirect?url=//%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D
+                        </a>
+                    </span>
                 </div>
                 
                 <div class="card mt-4 bg-light">
@@ -59,6 +77,317 @@
                         </ul>
                     </div>
                 </div>
+
+                <h3 class="mt-4">Headers de Seguridad</h3>
+                <p>Los headers HTTP de seguridad son fundamentales para proteger aplicaciones web contra diversos tipos de ataques. A continuación se detallan los principales headers de seguridad, su función y valores recomendados:</p>
+
+                <div class="accordion mt-3" id="securityHeadersAccordion">
+                    <!-- Content-Security-Policy -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingCSP">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCSP" aria-expanded="true" aria-controls="collapseCSP">
+                                Content-Security-Policy (CSP)
+                            </button>
+                        </h2>
+                        <div id="collapseCSP" class="accordion-collapse collapse show" aria-labelledby="headingCSP" data-bs-parent="#securityHeadersAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Función:</strong> Controla qué recursos pueden cargarse en la página y desde dónde.</p>
+                                <p><strong>Previene:</strong> Ataques XSS (Cross-Site Scripting), inyección de datos y otras vulnerabilidades de inyección de código.</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valor</th>
+                                                <th>Efecto</th>
+                                                <th>Nivel de Seguridad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>default-src 'self'</code></td>
+                                                <td>Solo permite recursos del mismo origen</td>
+                                                <td><span class="badge bg-success">Alto</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>default-src 'self'; script-src 'self' trusted-cdn.com</code></td>
+                                                <td>Permite scripts del mismo origen y de un CDN específico</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>default-src 'self'; script-src 'unsafe-inline'</code></td>
+                                                <td>Permite scripts inline (en el HTML)</td>
+                                                <td><span class="badge bg-warning text-dark">Equilibrado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>default-src *</code></td>
+                                                <td>Permite recursos de cualquier origen</td>
+                                                <td><span class="badge bg-danger">No Recomendado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Strict-Transport-Security -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingHSTS">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHSTS" aria-expanded="false" aria-controls="collapseHSTS">
+                                Strict-Transport-Security (HSTS)
+                            </button>
+                        </h2>
+                        <div id="collapseHSTS" class="accordion-collapse collapse" aria-labelledby="headingHSTS" data-bs-parent="#securityHeadersAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Función:</strong> Fuerza conexiones HTTPS, evitando conexiones HTTP no seguras.</p>
+                                <p><strong>Previene:</strong> Ataques de downgrade, man-in-the-middle y secuestro de cookies.</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valor</th>
+                                                <th>Efecto</th>
+                                                <th>Nivel de Seguridad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>max-age=31536000</code></td>
+                                                <td>Fuerza HTTPS durante 1 año</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>max-age=31536000; includeSubDomains</code></td>
+                                                <td>Fuerza HTTPS en el dominio y subdominios</td>
+                                                <td><span class="badge bg-success">Alto</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>max-age=31536000; includeSubDomains; preload</code></td>
+                                                <td>Permite incluir el dominio en la lista de precarga de navegadores</td>
+                                                <td><span class="badge bg-success">Muy Alto</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>max-age=0</code></td>
+                                                <td>Desactiva la política HSTS</td>
+                                                <td><span class="badge bg-danger">No Recomendado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- X-Content-Type-Options -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingXCTO">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseXCTO" aria-expanded="false" aria-controls="collapseXCTO">
+                                X-Content-Type-Options
+                            </button>
+                        </h2>
+                        <div id="collapseXCTO" class="accordion-collapse collapse" aria-labelledby="headingXCTO" data-bs-parent="#securityHeadersAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Función:</strong> Evita que los navegadores interpreten archivos de forma incorrecta.</p>
+                                <p><strong>Previene:</strong> Ataques MIME-sniffing (Multipurpose Internet Mail Extensions), donde archivos se interpretan como código ejecutable.</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valor</th>
+                                                <th>Efecto</th>
+                                                <th>Nivel de Seguridad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>nosniff</code></td>
+                                                <td>Impide que el navegador realice MIME-sniffing</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>No establecido</td>
+                                                <td>Permite al navegador interpretar los archivos como considere necesario</td>
+                                                <td><span class="badge bg-danger">No Recomendado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- X-Frame-Options -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingXFO">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseXFO" aria-expanded="false" aria-controls="collapseXFO">
+                                X-Frame-Options
+                            </button>
+                        </h2>
+                        <div id="collapseXFO" class="accordion-collapse collapse" aria-labelledby="headingXFO" data-bs-parent="#securityHeadersAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Función:</strong> Controla si un navegador puede renderizar una página en un &lt;frame&gt;, &lt;iframe&gt;, &lt;embed&gt; o &lt;object&gt;.</p>
+                                <p><strong>Previene:</strong> Ataques de clickjacking, donde sitios maliciosos colocan contenido invisible sobre elementos legítimos.</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valor</th>
+                                                <th>Efecto</th>
+                                                <th>Nivel de Seguridad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>DENY</code></td>
+                                                <td>No permite que la página se muestre en frames</td>
+                                                <td><span class="badge bg-success">Alto</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>SAMEORIGIN</code></td>
+                                                <td>Solo permite frames del mismo origen</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>ALLOW-FROM uri</code></td>
+                                                <td>Permite frames solo desde un origen específico</td>
+                                                <td><span class="badge bg-warning text-dark">Equilibrado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>No establecido</td>
+                                                <td>Permite que cualquier sitio puede enmarcar la página</td>
+                                                <td><span class="badge bg-danger">No Recomendado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Referrer-Policy -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingRP">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRP" aria-expanded="false" aria-controls="collapseRP">
+                                Referrer-Policy
+                            </button>
+                        </h2>
+                        <div id="collapseRP" class="accordion-collapse collapse" aria-labelledby="headingRP" data-bs-parent="#securityHeadersAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Función:</strong> Controla qué información de referencia se incluye con las solicitudes.</p>
+                                <p><strong>Previene:</strong> Fuga de información sensible a través de URLs y headers de referencia.</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valor</th>
+                                                <th>Efecto</th>
+                                                <th>Nivel de Seguridad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>no-referrer</code></td>
+                                                <td>No envía información de referencia</td>
+                                                <td><span class="badge bg-success">Alto</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>same-origin</code></td>
+                                                <td>Solo envía referrer para solicitudes del mismo origen</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>strict-origin</code></td>
+                                                <td>Solo envía el origen (sin la ruta) para solicitudes HTTPS a HTTPS</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>no-referrer-when-downgrade</code></td>
+                                                <td>No envía referrer al pasar de HTTPS a HTTP</td>
+                                                <td><span class="badge bg-warning text-dark">Equilibrado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>unsafe-url</code></td>
+                                                <td>Siempre envía la URL completa como referencia</td>
+                                                <td><span class="badge bg-danger">No Recomendado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Permissions-Policy -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingPP">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePP" aria-expanded="false" aria-controls="collapsePP">
+                                Permissions-Policy
+                            </button>
+                        </h2>
+                        <div id="collapsePP" class="accordion-collapse collapse" aria-labelledby="headingPP" data-bs-parent="#securityHeadersAccordion">
+                            <div class="accordion-body">
+                                <p><strong>Función:</strong> Permite o deniega el uso de características del navegador (anteriormente conocido como Feature-Policy).</p>
+                                <p><strong>Previene:</strong> Uso no autorizado de APIs del navegador como geolocalización, cámara, micrófono, etc.</p>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>Valor</th>
+                                                <th>Efecto</th>
+                                                <th>Nivel de Seguridad</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><code>camera=(), microphone=()</code></td>
+                                                <td>Deshabilita acceso a cámara y micrófono</td>
+                                                <td><span class="badge bg-success">Alto</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>geolocation=(self)</code></td>
+                                                <td>Solo permite geolocalización desde el mismo origen</td>
+                                                <td><span class="badge bg-primary">Recomendado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>payment=(self "https://payment-provider.com")</code></td>
+                                                <td>Permite API de pagos desde origen y proveedor de pagos</td>
+                                                <td><span class="badge bg-warning text-dark">Equilibrado</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td><code>camera=*, microphone=*</code></td>
+                                                <td>Permite acceso a cámara y micrófono desde cualquier origen</td>
+                                                <td><span class="badge bg-danger">No Recomendado</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info mt-4">
+                    <h4 class="alert-heading">Implementación en Flask</h4>
+                    <p>Para implementar estos headers en una aplicación Flask, puedes usar la función <code>after_request</code>:</p>
+                    <pre class="bg-light p-3">
+                    <code>
+@app.after_request
+def add_security_headers(response):
+    response.headers['Content-Security-Policy'] = "default-src 'self'"
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    # Añade más headers según sea necesario
+    return response
+
+</code></pre>
+                </div>
+
             </div>
         </div>
     </div>

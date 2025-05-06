@@ -29,6 +29,18 @@
                     </form>
                 </div>
                 
+                <hr class="my-4">
+                
+                <!-- Sección para eliminar cuenta -->
+                <div class="mt-4">
+                    <h5 class="text-danger">Zona Peligrosa</h5>
+                    <p>Si eliminas tu cuenta, todos tus datos se perderán permanentemente.</p>
+                    
+                    <form method="post" action="{{ url_for('delete_account') }}" onsubmit="return confirm('¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.');">
+                        <button type="submit" class="btn btn-danger" id="delete-account-btn">Eliminar mi cuenta</button>
+                    </form>
+                </div>
+                
                 <div class="card mt-4 bg-light">
                     <div class="card-header text-danger">
                         <strong>⚠️ Vulnerable a CSRF (Cross-Site Request Forgery)</strong>
@@ -38,6 +50,17 @@
                         <p class="card-text">No hay token CSRF en el formulario de cambio de contraseña.</p>
                         <p class="card-text">Un sitio malicioso podría crear un formulario que envíe automáticamente una solicitud para cambiar tu contraseña sin tu conocimiento.</p>
                         <p class="card-text">Puedes ver una demostración del ataque <a href="/static/csrf-demo.html" target="_blank">aquí</a>.</p>
+                    </div>
+                </div>
+                
+                <div class="card mt-4 bg-light">
+                    <div class="card-header text-danger">
+                        <strong>⚠️ Vulnerable a Clickjacking</strong>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Esta página es intencionalmente vulnerable a Clickjacking.</p>
+                        <p class="card-text">Un sitio malicioso podría cargar esta página en un iframe invisible y engañarte para que hagas clic en el botón "Eliminar mi cuenta".</p>
+                        <p class="card-text">Puedes ver una demostración del ataque <a href="/static/clickjacking-demo.html" target="_blank">aquí</a>.</p>
                     </div>
                 </div>
             </div>

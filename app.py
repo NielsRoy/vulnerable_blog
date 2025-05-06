@@ -193,6 +193,33 @@ def profile():
     password_changed = session.pop('password_changed', False)
     return render_template('profile.html', username=session.get('username'), password_changed=password_changed)
 
+@app.route('/delete-account', methods=['POST'])
+def delete_account():
+    if not session.get('username'):
+        return redirect(url_for('login'))
+
+    # Vulnerabilidad CSRF: no hay token CSRF
+    # Eliminar usuario
+    user = User.query.filter_by(username=session['username']).first()
+    if user:
+        # Eliminar comentarios del usuario
+        Comment.query.filter_by(author=session['username']).delete()
+        
+        # Eliminar posts del usuario
+        Post.query.filter_by(author=session['username']).delete()
+        
+        # Eliminar usuario
+        db.session.delete(user)
+        db.session.commit()
+        
+        # Cerrar sesión
+        session.pop('username', None)
+        
+        # Informar al usuario que la cuenta ha sido eliminada
+        flash('Tu cuenta ha sido eliminada permanentemente', 'success')
+        
+    return redirect(url_for('index'))
+
 @app.route('/logout')
 def logout():
     session.pop('username', None)
@@ -204,11 +231,12 @@ def about():
 
 @app.route('/redirect')
 def open_redirect():
-    # Vulnerabilidad Open Redirect: redirección sin validación
+    # Capturar la URL de redirección del parámetro
     url = request.args.get('url', '')
     
     if url:
-        return redirect(url)  # No hay validación de la URL
+        # En lugar de redirigir directamente, mostrar una página intermedia
+        return render_template('redirect_warning.html', redirect_url=url)
     
     return redirect(url_for('index'))
 

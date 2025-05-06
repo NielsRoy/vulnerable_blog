@@ -1,0 +1,54 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h2>⚠️ Advertencia de Redirección</h2>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">Estás a punto de ser redirigido</h4>
+                    <p>Estás a punto de ser redirigido a la siguiente URL:</p>
+                    <div class="bg-light p-3 my-3 border rounded">
+                        <code>{{ redirect_url }}</code>
+                    </div>
+                </div>
+                
+                <h3 class="mt-4">¿Qué es una vulnerabilidad Open Redirect?</h3>
+                <p>
+                    Un "Open Redirect" es una vulnerabilidad de seguridad web que ocurre cuando una aplicación 
+                    toma una URL de entrada y redirige a los usuarios sin validar o sanitizar adecuadamente esa URL.
+                </p>
+                <p>
+                    Esta vulnerabilidad es común en escenarios como: cuando el login de un sistema
+                    necesita redirigir al usuario a la página que deseaba visitar originalmente después de 
+                    autenticarse. Esto se suele implementar pasando la URL deseada como parámetro en la URL 
+                    del formulario de login (por ejemplo: <code>/login?redirect_to=/dashboard</code>).
+                </p>
+                
+                <h4>Los riesgos incluyen:</h4>
+                <ul>
+                    <li><strong>Phishing:</strong> Un atacante podría crear enlaces que parecen legítimos pero redirigen a sitios maliciosos.</li>
+                    <li><strong>Robo de credenciales:</strong> Los usuarios podrían ser dirigidos a sitios falsos diseñados para robar información.</li>
+                    <li><strong>Evasión de filtros:</strong> Algunos filtros de contenido pueden ser evadidos mediante redirecciones.</li>
+                </ul>
+                
+                <h4>Una implementación segura debería:</h4>
+                <ul>
+                    <li>Validar todas las URLs de redirección contra una lista blanca.</li>
+                    <li>Usar URLs relativas en lugar de absolutas cuando sea posible.</li>
+                    <li>Implementar una página de confirmación como esta.</li>
+                    <li>Verificar el origen de la solicitud de redirección.</li>
+                </ul>
+                
+                <div class="mt-4 d-flex justify-content-between">
+                    <a href="{{ url_for('index') }}" class="btn btn-secondary">Cancelar</a>
+                    <a href="{{ redirect_url }}" class="btn btn-primary">Continuar a la URL</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
